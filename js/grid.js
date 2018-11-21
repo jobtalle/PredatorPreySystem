@@ -20,3 +20,18 @@ const Grid = function(width, height) {
 
     };
 };
+
+Grid.DELTAS_A = [
+    new Vector(1, -1),
+    new Vector(1, 0),
+    new Vector(0, 1),
+    new Vector(-1, 0),
+    new Vector(-1, -1),
+    new Vector(0, -1)];
+Grid.DELTAS_B = [
+    new Vector(1, 0),
+    new Vector(1, 1),
+    new Vector(0, 1),
+    new Vector(-1, 1),
+    new Vector(-1, 0),
+    new Vector(0, -1)];

@@ -70,4 +70,4 @@ const GridRenderer = function(canvas, grid, radius) {
     makeOverlay();
 };
 
-GridRenderer.COLOR_EDGES = "rgb(150, 150, 150)";
+GridRenderer.COLOR_EDGES = "rgb(170, 170, 170)";
