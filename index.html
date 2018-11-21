@@ -6,7 +6,22 @@
     <title>Simulation</title>
 </head>
 <body>
-    <canvas id="grid" width="1400" height="600"></canvas>
+    <div id="wrapper">
+        <canvas id="grid" width="1400" height="600"></canvas>
+        <canvas id="plot-agents" width="1400" height="200"></canvas>
+        <div id="controls">
+            <label>
+                <input id="controls-frame" type="text" readonly>
+            </label>
+            <button id="controls-stop">Stop</button>
+            <button id="controls-start">Start</button>
+            <button id="controls-step">Step</button>
+        </div>
+    </div>
+    <script src="js/grid.js"></script>
+    <script src="js/simulation.js"></script>
+    <script src="js/gridRenderer.js"></script>
+    <script src="js/agents/plant.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
