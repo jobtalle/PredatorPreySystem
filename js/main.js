@@ -8,6 +8,11 @@ const grid = new Grid(
 const simulation = new Simulation(grid);
 const gridRenderer = new GridRenderer(canvasRenderer, grid, hexRadius);
 
+const step = () => {
+    simulation.step();
+    gridRenderer.render();
+};
+
 for (let i = 0; i < 100; ++i)
     grid.set(
         Math.floor(Math.random() * grid.getWidth()),
@@ -15,3 +20,5 @@ for (let i = 0; i < 100; ++i)
         new Plant());
 
 gridRenderer.render();
+
+document.getElementById("controls-step").onclick = step;

@@ -63,6 +63,8 @@ const GridRenderer = function(canvas, grid, radius) {
     this.render = () => {
         const context = canvas.getContext("2d");
 
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
         renderAgents(context);
         renderOverlay(context);
     };
@@ -70,4 +72,4 @@ const GridRenderer = function(canvas, grid, radius) {
     makeOverlay();
 };
 
-GridRenderer.COLOR_EDGES = "rgb(170, 170, 170)";
+GridRenderer.COLOR_EDGES = "rgb(140, 140, 140)";
