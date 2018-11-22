@@ -58,10 +58,17 @@ const Grid = function(width, height) {
             if (!agent)
                 continue;
 
-            const action = agent.step(makeContext(x, y));
+            const context = makeContext(x, y);
+            const action = agent.step(context);
 
             switch (action.type) {
                 case Action.TYPE_MOVE:
+                    if (!context.access[action.direction]) {
+                        getFront()[coordsToIndex(x, y)] = agent;
+
+                        break;
+                    }
+
                     const deltas = getDeltas(x);
                     const index = coordsToIndex(x + deltas[action.direction].x, y + deltas[action.direction].y);
 
