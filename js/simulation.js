@@ -1,10 +1,14 @@
 const Simulation = function(grid) {
-    let _step = 0;
+    let _frame = 0;
 
-    this.getStep = () => _step;
+    this.onStep = null;
+    this.getFrame = () => _frame;
     this.step = () => {
         grid.step();
 
-        ++_step;
+        if (this.onStep)
+            this.onStep();
+
+        ++_frame;
     };
 };
