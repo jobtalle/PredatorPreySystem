@@ -62,21 +62,37 @@ const Grid = function(width, height) {
             const action = agent.step(context);
 
             switch (action.type) {
+                case Action.TYPE_COPY:
+                    if (context.access[action.direction])
+                        getFront()[coordsToIndex(x, y)] = agent.copy();
+
                 case Action.TYPE_MOVE:
-                    if (!context.access[action.direction]) {
+                    if (context.access[action.direction]) {
+                        const deltas = getDeltas(x);
+                        const index = coordsToIndex(x + deltas[action.direction].x, y + deltas[action.direction].y);
+
+                        getFront()[index] = agent;
+                        getBack()[index] = null;
+                    }
+                    else
                         getFront()[coordsToIndex(x, y)] = agent;
 
-                        break;
+                    break;
+                case Action.TYPE_EAT:
+                    if (context.neighbors[action.direction]) {
+                        const deltas = getDeltas(x);
+                        const index = coordsToIndex(x + deltas[action.direction].x, y + deltas[action.direction].y);
+
+                        getFront()[index] = agent;
+                        getBack()[index] = null;
                     }
+                    else
+                        getFront()[coordsToIndex(x, y)] = agent;
 
-                    const deltas = getDeltas(x);
-                    const index = coordsToIndex(x + deltas[action.direction].x, y + deltas[action.direction].y);
-
-                    getFront()[index] = agent;
-                    getBack()[index] = null;
                     break;
                 case Action.TYPE_IDLE:
                     getFront()[coordsToIndex(x, y)] = agent;
+
                     break;
             }
         }

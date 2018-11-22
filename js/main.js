@@ -31,4 +31,4 @@ updateGraphics();
 setInterval(() => {
     if (gui.isRunning())
         simulation.step();
-}, 100);
+}, 50);
