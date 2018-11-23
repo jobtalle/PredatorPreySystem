@@ -1,4 +1,4 @@
-const hexRadius = 8;
+const hexRadius = 6;
 const canvasRenderer = document.getElementById("grid");
 
 const grid = new Grid(
@@ -15,13 +15,13 @@ const updateGraphics = () => {
 
 simulation.onStep = updateGraphics;
 
-for (let i = 0; i < 500; ++i)
+for (let i = 0; i < 1500; ++i)
     grid.set(
         Math.floor(Math.random() * grid.getWidth()),
         Math.floor(Math.random() * grid.getHeight()),
         new Plant());
 
-for (let i = 0; i < 30; ++i)
+for (let i = 0; i < 130; ++i)
     grid.set(
         Math.floor(Math.random() * grid.getWidth()),
         Math.floor(Math.random() * grid.getHeight()),
