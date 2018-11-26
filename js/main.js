@@ -4,7 +4,7 @@ const canvasRenderer = document.getElementById("grid");
 const grid = new Grid(
     Math.floor((canvasRenderer.width - hexRadius * 0.5) / (hexRadius * 1.5)),
     Math.floor((canvasRenderer.height - Math.sqrt(3) * hexRadius * 0.5) / (Math.sqrt(3) * hexRadius)),
-    35);
+    120);
 const simulation = new Simulation(grid);
 const gridRenderer = new GridRenderer(canvasRenderer, grid, hexRadius);
 const gui = new Gui(simulation);
@@ -25,10 +25,10 @@ for (let i = 0; i < 1000; ++i) {
         Math.floor(Math.random() * grid.getHeight())).agent = plant;
 }
 
-for (let i = 0; i < 150; ++i) {
+for (let i = 0; i < 50; ++i) {
     const rabbit = new Rabbit();
 
-    rabbit.setMass(Math.ceil(Math.random() * 225));
+    rabbit.setMass(Math.ceil(Math.random() * 500));
     grid.get(
         Math.floor(Math.random() * grid.getWidth()),
         Math.floor(Math.random() * grid.getHeight())).agent = rabbit;

@@ -16,7 +16,7 @@ const GridRenderer = function(canvas, grid, radius) {
     };
 
     const makeFertilizerColor = fertilizer => {
-        const factor = Math.max(0, 1 - fertilizer * 0.01) * 0.2 + 0.8;
+        const factor = Math.max(0, 1 - fertilizer * 0.015) * 0.2 + 0.8;
 
         return "rgb(" + factor * 255 + ", " + factor * 244 + ", " + factor * 222 + ")";
     };

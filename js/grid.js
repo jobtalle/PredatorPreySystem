@@ -1,4 +1,4 @@
-const Grid = function(width, height, defaultFertilization) {
+const Grid = function(width, height, maxFertilization) {
     const _grids = [
         new Array(width * height + 1),
         new Array(width * height + 1)];
@@ -11,8 +11,19 @@ const Grid = function(width, height, defaultFertilization) {
     const getBack = () => _grids[1 - _front];
 
     const initializeGrids = () => {
-        for (const grid of _grids) for (let i = 0; i < grid.length; ++i)
-            grid[i] = new GridPoint(null, defaultFertilization);
+        for (const grid of _grids) {
+            for (let y = 0; y < height; ++y) for (let x = 0; x < width; ++x) {
+                const index = coordsToIndex(x, y);
+                const fertilization = Math.ceil(
+                    maxFertilization *
+                    (-Math.cos(Math.PI * x * 2 / width) + 1) * 0.5 *
+                    (-Math.cos(Math.PI * y * 2 / height) + 1) * 0.5);
+
+                grid[index] = new GridPoint(null, fertilization);
+            }
+
+            grid[width * height] = new GridPoint(null, 0);
+        }
     };
 
     const coordsToIndex = (x, y) => {
