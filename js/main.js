@@ -16,18 +16,23 @@ const updateGraphics = () => {
 
 simulation.onStep = updateGraphics;
 
-for (let i = 0; i < 1500; ++i)
+for (let i = 0; i < 1500; ++i) {
+    const plant = new Plant();
+
+    plant.setMass(Math.random() * 5);
     grid.get(
         Math.floor(Math.random() * grid.getWidth()),
-        Math.floor(Math.random() * grid.getHeight())).agent = new Plant();
+        Math.floor(Math.random() * grid.getHeight())).agent = plant;
+}
 
-/*
-for (let i = 0; i < 130; ++i)
-    grid.set(
+for (let i = 0; i < 130; ++i) {
+    const rabbit = new Rabbit();
+
+    rabbit.setMass(Math.random() * 150);
+    grid.get(
         Math.floor(Math.random() * grid.getWidth()),
-        Math.floor(Math.random() * grid.getHeight()),
-        new Rabbit());
-        */
+        Math.floor(Math.random() * grid.getHeight())).agent = rabbit;
+}
 
 updateGraphics();
 setInterval(() => {

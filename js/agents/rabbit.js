@@ -1,33 +1,28 @@
 const Rabbit = function() {
     let _direction = Math.floor(Math.random() * 6);
-    let _life = Rabbit.LIFE_INITIAL;
+    let _color = Rabbit.COLOR;
 
-    this.getColor = () => Rabbit.COLOR;
+    this.getColor = () => _color;
     this.getType = () => Types.TYPE_RABBIT;
     this.copy = () => new Rabbit();
     this.getMinMass = () => 5;
 
     this.step = context => {
-        if (--_life === 0)
-            return new Action(Action.TYPE_DIE);
-        else if (_life >= Rabbit.COPY_THRESHOLD) {
+        if (this.getMass() > Rabbit.COPY_THRESHOLD) {
             const possibleAccess = context.getAccess();
 
-            if (possibleAccess.length) {
-                _life -= Rabbit.COPY_COST;
-
+            if (possibleAccess.length)
                 return new Action(
                     Action.TYPE_COPY,
                     possibleAccess[Math.floor(Math.random() * possibleAccess.length)]);
-            }
         }
 
-        const inFront = context.neighbors[_direction];
+        const facing = context.neighbors[_direction];
 
-        if (inFront && inFront.getType() === Types.TYPE_PLANT) {
-            _life += Rabbit.LIFE_INCREMENT;
+        if (facing && facing.getType() === Types.TYPE_PLANT) {
+            _color = Rabbit.COLOR_EAT;
 
-            return new Action(Action.TYPE_EAT, _direction);
+            return new Action(Action.TYPE_EAT_AGENT, _direction);
         }
 
         if (Math.random() < Rabbit.TURN_CHANCE)
@@ -39,9 +34,7 @@ const Rabbit = function() {
 
 Rabbit.prototype = Object.create(Agent.prototype);
 
-Rabbit.LIFE_INITIAL = 5;
-Rabbit.LIFE_INCREMENT = 8;
-Rabbit.COPY_THRESHOLD = 20;
-Rabbit.COPY_COST = 10;
+Rabbit.COPY_THRESHOLD = 50;
 Rabbit.TURN_CHANCE = 0.35;
 Rabbit.COLOR = "rgb(40, 150, 220)";
+Rabbit.COLOR_EAT = "rgb(200, 20, 20)";

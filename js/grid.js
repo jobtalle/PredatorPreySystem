@@ -91,7 +91,19 @@ const Grid = function(width, height, defaultFertilization) {
     };
 
     const actionEatAgent = (x, y, back, front, context, direction) => {
+        if (context.access[direction])
+            return false;
 
+        back.agent.addMass(context.neighbors[direction].getMass());
+
+        const index = coordsToIndex(
+            x + context.deltas[direction].x,
+            y + context.deltas[direction].y);
+
+        getFront()[index].agent = back.agent;
+        getBack()[index].agent = null;
+
+        return true;
     };
 
     const actionMove = (x, y, back, front, context, direction, cost) => {
@@ -120,11 +132,20 @@ const Grid = function(width, height, defaultFertilization) {
 
             cellFront.fertilizer = cellBack.fertilizer;
 
-            if (!cellBack.agent)
-                continue;
+            if (!cellBack.agent) {
+                cellBack.fertilizer = 0;
 
-            if (cellBack.agent.getMass() < cellBack.agent.getMinMass())
+                continue;
+            }
+
+            if (cellBack.agent.getMass() < cellBack.agent.getMinMass()) {
                 actionDie(x, y, cellBack, cellFront);
+
+                cellBack.agent = null;
+                cellBack.fertilizer = 0;
+
+                continue;
+            }
 
             const context = makeContext(x, y);
             const action = cellBack.agent.step(context);
@@ -159,9 +180,13 @@ const Grid = function(width, height, defaultFertilization) {
 
                     break;
             }
+        }
 
-            cellBack.agent = null;
-            cellBack.fertilizer = 0;
+        for (let i = 0; i < width * height; ++i) {
+            const cell = getBack()[i];
+
+            cell.agent = null;
+            cell.fertilizer = 0;
         }
     };
 
