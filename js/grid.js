@@ -4,6 +4,7 @@ const Grid = function(width, height, defaultFertilization) {
         new Array(width * height + 1)];
 
     let _front = 0;
+    let _mass = 0;
 
     const flip = () => _front = 1 - _front;
     const getFront = () => _grids[_front];
@@ -125,10 +126,17 @@ const Grid = function(width, height, defaultFertilization) {
     this.step = (costMove, costIdle, costCopy) => {
         flip();
 
+        _mass = 0;
+
         for (let y = 0; y < height; ++y) for (let x = 0; x < width; ++x) {
             const index = coordsToIndex(x, y);
             const cellBack = getBack()[index];
             const cellFront = getFront()[index];
+
+            _mass += cellBack.fertilizer;
+
+            if (cellBack.agent)
+                _mass += cellBack.agent.getMass();
 
             cellFront.fertilizer = cellBack.fertilizer;
 
@@ -188,6 +196,8 @@ const Grid = function(width, height, defaultFertilization) {
             cell.agent = null;
             cell.fertilizer = 0;
         }
+
+        console.log(_mass);
     };
 
     initializeGrids();

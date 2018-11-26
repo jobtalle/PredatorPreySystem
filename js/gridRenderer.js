@@ -15,6 +15,12 @@ const GridRenderer = function(canvas, grid, radius) {
         renderGrid(context);
     };
 
+    const makeFertilizerColor = fertilizer => {
+        const factor = Math.max(0, 1 - fertilizer * 0.1) * 0.2 + 0.8;
+
+        return "rgb(" + factor * 255 + ", " + factor * 244 + ", " + factor * 222 + ")";
+    };
+
     const fillCell = (context, x, y, color) => {
         context.fillStyle = color;
 
@@ -57,6 +63,8 @@ const GridRenderer = function(canvas, grid, radius) {
 
             if (cell.agent)
                 fillCell(context, getX(x), getY(x, y), cell.agent.getColor());
+            else
+                fillCell(context, getX(x), getY(x, y), makeFertilizerColor(cell.fertilizer));
         }
     };
 

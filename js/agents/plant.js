@@ -27,7 +27,7 @@ Plant.prototype = Object.create(Agent.prototype);
 
 Plant.MASS_MIN = 8;
 Plant.MASS_MAX = 12;
-Plant.EAT_SPEED = 0.5;
+Plant.EAT_SPEED = 1;
 Plant.COPY_THRESHOLD = 10;
 Plant.COPY_CHANCE = 0.7;
 Plant.COLOR = "rgb(130, 200, 120)";
