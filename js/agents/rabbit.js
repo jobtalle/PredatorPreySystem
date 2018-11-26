@@ -5,6 +5,7 @@ const Rabbit = function() {
     this.getColor = () => Rabbit.COLOR;
     this.getType = () => Types.TYPE_RABBIT;
     this.copy = () => new Rabbit();
+    this.getMinMass = () => 5;
 
     this.step = context => {
         if (--_life === 0)

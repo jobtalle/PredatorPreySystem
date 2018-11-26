@@ -50,68 +50,118 @@ const Grid = function(width, height, defaultFertilization) {
         return new Context(neighbors, access, deltas, getBack()[coordsToIndex(x, y)].fertilizer);
     };
 
-    const actionCopy = (x, y, agent, context, direction) => {
-        if (!context.access[direction])
-            return;
+    const actionIdle = (x, y, back, front, cost) => {
+        front.agent = back.agent;
+        front.fertilizer += front.agent.consumeMass(cost);
+    };
 
-        const totalMass = agent.getMass();
-        const newAgent = agent.copy();
+    const actionDie = (x, y, back, front) => {
+        front.fertilizer += back.agent.getMass();
+    };
+
+    const actionCopy = (x, y, back, front, context, direction, cost) => {
+        if (!context.access[direction])
+            return false;
+
+        front.fertilizer += back.agent.consumeMass(cost);
+
+        const totalMass = back.agent.getMass();
+        const newAgent = back.agent.copy();
 
         newAgent.setMass(totalMass * 0.5);
-        agent.setMass(totalMass * 0.5);
+        back.agent.setMass(totalMass * 0.5);
 
-        getFront()[coordsToIndex(x, y)].agent = agent;
-        getFront()[coordsToIndex(x + context.deltas[direction].x, y + context.deltas[direction].y)].agent = newAgent;
+        front.agent = back.agent;
+        getFront()[coordsToIndex(
+            x + context.deltas[direction].x,
+            y + context.deltas[direction].y)].agent = newAgent;
+
+        return true;
     };
 
-    const actionIdle = (x, y, agent) => {
-        getFront()[coordsToIndex(x, y)].agent = agent;
+    const actionEatFertilizer = (x, y, back, front, context, quantity) => {
+        if (back.fertilizer < quantity)
+            return false;
+
+        front.agent = back.agent;
+        front.agent.addMass(quantity);
+        front.fertilizer = back.fertilizer - quantity;
+
+        return true;
     };
 
-    const actionEat = (x, y, agent, context, direction, quantity) => {
-        const cell = getFront()[coordsToIndex(x, y)];
+    const actionEatAgent = (x, y, back, front, context, direction) => {
 
-        cell.agent = agent;
+    };
 
-        if (context.fertilizer >= quantity)
-            cell.fertilizer = context.fertilizer - quantity;
+    const actionMove = (x, y, back, front, context, direction, cost) => {
+        if (!context.access[direction])
+            return false;
+
+        front.fertilizer += back.agent.consumeMass(cost);
+
+        getFront()[coordsToIndex(
+            x + context.deltas[direction].x,
+            y + context.deltas[direction].y)].agent = back.agent;
+
+        return true;
     };
 
     this.get = (x, y) => getFront()[coordsToIndex(x, y)];
     this.getWidth = () => width;
     this.getHeight = () => height;
-    this.step = (costMove, costIdle, costSplit) => {
+    this.step = (costMove, costIdle, costCopy) => {
         flip();
 
         for (let y = 0; y < height; ++y) for (let x = 0; x < width; ++x) {
-            const cell = getBack()[coordsToIndex(x, y)];
+            const index = coordsToIndex(x, y);
+            const cellBack = getBack()[index];
+            const cellFront = getFront()[index];
 
-            // Carry over fertilizer by default
-            getFront()[coordsToIndex(x, y)].fertilizer = cell.fertilizer;
+            cellFront.fertilizer = cellBack.fertilizer;
 
-            if (!cell.agent)
+            if (!cellBack.agent)
                 continue;
 
+            if (cellBack.agent.getMass() < cellBack.agent.getMinMass())
+                actionDie(x, y, cellBack, cellFront);
+
             const context = makeContext(x, y);
-            const action = cell.agent.step(context);
+            const action = cellBack.agent.step(context);
 
             switch (action.type) {
-                case Action.TYPE_COPY:
-                    actionCopy(x, y, cell.agent, context, action.arg0);
-
-                    break;
-                case Action.TYPE_EAT:
-                    actionEat(x, y, cell.agent, context, action.arg0, action.arg1);
-
-                    break;
                 case Action.TYPE_IDLE:
-                    actionIdle(x, y, cell.agent);
+                    actionIdle(x, y, cellBack, cellFront, costIdle);
+
+                    break;
+                case Action.TYPE_DIE:
+                    actionDie(x, y, cellBack, cellFront);
+
+                    break;
+                case Action.TYPE_COPY:
+                    if (!actionCopy(x, y, cellBack, cellFront, context, action.arg0, costCopy))
+                        actionIdle(x, y, cellBack, cellFront, costIdle);
+
+                    break;
+                case Action.TYPE_EAT_FERTILIZER:
+                    if (!actionEatFertilizer(x, y, cellBack, cellFront, context, action.arg0))
+                        actionIdle(x, y, cellBack, cellFront, costIdle);
+
+                    break;
+                case Action.TYPE_EAT_AGENT:
+                    if (!actionEatAgent(x, y, cellBack, cellFront, context, action.arg0))
+                        actionIdle(x, y, cellBack, cellFront, costIdle);
+
+                    break;
+                case Action.TYPE_MOVE:
+                    if (!actionMove(x, y, cellBack, cellFront, context, action.arg0, costMove))
+                        actionIdle(x, y, cellBack, cellFront, costIdle);
 
                     break;
             }
 
-            cell.agent = null;
-            cell.fertilizer = 0;
+            cellBack.agent = null;
+            cellBack.fertilizer = 0;
         }
     };
 
