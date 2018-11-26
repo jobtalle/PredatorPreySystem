@@ -1,10 +1,11 @@
 const Grid = function(width, height, maxFertilization) {
+    const _histogram = new Array(Types.TYPE_COUNT).fill(0);
     const _grids = [
         new Array(width * height + 1),
         new Array(width * height + 1)];
 
     let _front = 0;
-    let _mass = 0;
+    let _fertilizer = 0;
 
     const flip = () => _front = 1 - _front;
     const getFront = () => _grids[_front];
@@ -160,10 +161,10 @@ const Grid = function(width, height, maxFertilization) {
     this.get = (x, y) => getFront()[coordsToIndex(x, y)];
     this.getWidth = () => width;
     this.getHeight = () => height;
+    this.getHistogram = () => _histogram;
+    this.getFertilizer = () => _fertilizer;
     this.step = (costMove, costIdle, costCopy) => {
         flip();
-
-        _mass = 0;
 
         for (let y = 0; y < height; ++y) for (let x = 0; x < width; ++x) {
             const index = coordsToIndex(x, y);
@@ -220,18 +221,36 @@ const Grid = function(width, height, maxFertilization) {
             }
         }
 
+        _histogram.fill(0);
+        _fertilizer = 0;
+
         for (let i = 0; i < width * height; ++i) {
             const back = getBack()[i];
             const front = getFront()[i];
 
-            _mass += front.fertilizer;
-
             if (front.agent)
-                _mass += front.agent.getMass();
+                _histogram[front.agent.getType()] += front.agent.getMass();
+
+            _fertilizer += front.fertilizer;
 
             back.agent = null;
             back.fertilizer = front.fertilizer;
         }
+    };
+
+    this.getMass = () => {
+        let mass = 0;
+
+        for (let i = 0; i < width * height; ++i) {
+            const cell = getFront()[i];
+
+            mass += cell.fertilizer;
+
+            if (cell.agent)
+                mass += cell.agent.getMass();
+        }
+
+        return mass;
     };
 
     initializeGrids();
