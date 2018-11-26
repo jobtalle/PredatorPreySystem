@@ -3,6 +3,7 @@ const GraphRenderer = function(canvas, grid, graphs) {
 
     let _totalMass = 0;
     let _front = 0;
+    let _history = 0;
 
     const flip = () => _front = 1 - _front;
 
@@ -38,7 +39,7 @@ const GraphRenderer = function(canvas, grid, graphs) {
 
     const renderGraph = context => {
         context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(_frames[_front], 0, 0);
+        context.drawImage(_frames[_front], Math.min(0, -canvas.width + _history), 0);
     };
 
     this.gauge = () => {
@@ -53,6 +54,8 @@ const GraphRenderer = function(canvas, grid, graphs) {
         renderBiomass(_frames[_front].getContext("2d"));
 
         renderGraph(canvas.getContext("2d"));
+
+        ++_history;
     };
 };
 

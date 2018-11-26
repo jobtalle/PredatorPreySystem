@@ -1,4 +1,4 @@
-const hexRadius = 7;
+const hexRadius = 6;
 const canvasRenderer = document.getElementById("grid");
 const canvasGraph = document.getElementById("graph");
 
