@@ -1,6 +1,8 @@
-const Context = function(neighbors, access) {
+const Context = function(neighbors, access, deltas, fertilizer) {
     this.neighbors = neighbors;
     this.access = access;
+    this.deltas = deltas;
+    this.fertilizer = fertilizer;
 };
 
 Context.prototype.getAccess = function() {

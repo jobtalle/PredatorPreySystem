@@ -1,6 +1,7 @@
-const Action = function(type, direction) {
+const Action = function(type, arg0, arg1) {
     this.type = type;
-    this.direction = direction;
+    this.arg0 = arg0;
+    this.arg1 = arg1;
 };
 
 Action.TYPE_IDLE = 0;

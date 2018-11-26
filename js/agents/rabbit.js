@@ -36,6 +36,8 @@ const Rabbit = function() {
     };
 };
 
+Rabbit.prototype = Object.create(Agent.prototype);
+
 Rabbit.LIFE_INITIAL = 5;
 Rabbit.LIFE_INCREMENT = 8;
 Rabbit.COPY_THRESHOLD = 20;

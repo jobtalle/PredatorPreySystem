@@ -53,10 +53,10 @@ const GridRenderer = function(canvas, grid, radius) {
 
     const renderAgents = context => {
         for (let y = 0; y < grid.getHeight(); ++y) for (let x = 0; x < grid.getWidth(); ++x) {
-            const agent = grid.get(x, y);
+            const cell = grid.get(x, y);
 
-            if (agent)
-                fillCell(context, getX(x), getY(x, y), agent.getColor());
+            if (cell.agent)
+                fillCell(context, getX(x), getY(x, y), cell.agent.getColor());
         }
     };
 

@@ -1,9 +1,18 @@
-const Grid = function(width, height) {
+const Grid = function(width, height, defaultFertilization) {
     const _grids = [
-        new Array(width * height + 1).fill(null),
-        new Array(width * height + 1).fill(null)];
+        new Array(width * height + 1),
+        new Array(width * height + 1)];
 
     let _front = 0;
+
+    const flip = () => _front = 1 - _front;
+    const getFront = () => _grids[_front];
+    const getBack = () => _grids[1 - _front];
+
+    const initializeGrids = () => {
+        for (const grid of _grids) for (let i = 0; i < grid.length; ++i)
+            grid[i] = new GridPoint(null, defaultFertilization);
+    };
 
     const coordsToIndex = (x, y) => {
         if (x < 0 || y < 0 || x >= width || y >= height)
@@ -18,7 +27,7 @@ const Grid = function(width, height) {
         if (index === width * height)
             return false;
 
-        return !getFront()[index] && !getBack()[index];
+        return !getFront()[index].agent && !getBack()[index].agent;
     };
 
     const getDeltas = x => {
@@ -34,71 +43,79 @@ const Grid = function(width, height) {
         const access = new Array(6);
 
         for (let direction = 0; direction < 6; ++direction) {
-            neighbors[direction] = getBack()[coordsToIndex(x + deltas[direction].x, y + deltas[direction].y)];
+            neighbors[direction] = getBack()[coordsToIndex(x + deltas[direction].x, y + deltas[direction].y)].agent;
             access[direction] = isFree(x + deltas[direction].x, y + deltas[direction].y);
         }
 
-        return new Context(neighbors, access);
+        return new Context(neighbors, access, deltas, getBack()[coordsToIndex(x, y)].fertilizer);
     };
 
-    const flip = () => _front = 1 - _front;
-    const getFront = () => _grids[_front];
-    const getBack = () => _grids[1 - _front];
+    const actionCopy = (x, y, agent, context, direction) => {
+        if (!context.access[direction])
+            return;
+
+        const totalMass = agent.getMass();
+        const newAgent = agent.copy();
+
+        newAgent.setMass(totalMass * 0.5);
+        agent.setMass(totalMass * 0.5);
+
+        getFront()[coordsToIndex(x, y)].agent = agent;
+        getFront()[coordsToIndex(x + context.deltas[direction].x, y + context.deltas[direction].y)].agent = newAgent;
+    };
+
+    const actionIdle = (x, y, agent) => {
+        getFront()[coordsToIndex(x, y)].agent = agent;
+    };
+
+    const actionEat = (x, y, agent, context, direction, quantity) => {
+        const cell = getFront()[coordsToIndex(x, y)];
+
+        cell.agent = agent;
+
+        if (context.fertilizer >= quantity)
+            cell.fertilizer = context.fertilizer - quantity;
+    };
 
     this.get = (x, y) => getFront()[coordsToIndex(x, y)];
-    this.set = (x, y, object) => getFront()[coordsToIndex(x, y)] = object;
     this.getWidth = () => width;
     this.getHeight = () => height;
-    this.step = () => {
+    this.step = (costMove, costIdle, costSplit) => {
         flip();
 
         for (let y = 0; y < height; ++y) for (let x = 0; x < width; ++x) {
-            const agent = getBack()[coordsToIndex(x, y)];
+            const cell = getBack()[coordsToIndex(x, y)];
 
-            if (!agent)
+            // Carry over fertilizer by default
+            getFront()[coordsToIndex(x, y)].fertilizer = cell.fertilizer;
+
+            if (!cell.agent)
                 continue;
 
             const context = makeContext(x, y);
-            const action = agent.step(context);
+            const action = cell.agent.step(context);
 
             switch (action.type) {
                 case Action.TYPE_COPY:
-                    if (context.access[action.direction])
-                        getFront()[coordsToIndex(x, y)] = agent.copy();
-
-                case Action.TYPE_MOVE:
-                    if (context.access[action.direction]) {
-                        const deltas = getDeltas(x);
-                        const index = coordsToIndex(x + deltas[action.direction].x, y + deltas[action.direction].y);
-
-                        getFront()[index] = agent;
-                        getBack()[index] = null;
-                    }
-                    else
-                        getFront()[coordsToIndex(x, y)] = agent;
+                    actionCopy(x, y, cell.agent, context, action.arg0);
 
                     break;
                 case Action.TYPE_EAT:
-                    if (context.neighbors[action.direction]) {
-                        const deltas = getDeltas(x);
-                        const index = coordsToIndex(x + deltas[action.direction].x, y + deltas[action.direction].y);
-
-                        getFront()[index] = agent;
-                        getBack()[index] = null;
-                    }
-                    else
-                        getFront()[coordsToIndex(x, y)] = agent;
+                    actionEat(x, y, cell.agent, context, action.arg0, action.arg1);
 
                     break;
                 case Action.TYPE_IDLE:
-                    getFront()[coordsToIndex(x, y)] = agent;
+                    actionIdle(x, y, cell.agent);
 
                     break;
             }
-        }
 
-        getBack().fill(null);
+            cell.agent = null;
+            cell.fertilizer = 0;
+        }
     };
+
+    initializeGrids();
 };
 
 Grid.DELTAS_A = [
