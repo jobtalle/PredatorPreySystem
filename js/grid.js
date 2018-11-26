@@ -66,6 +66,7 @@ const Grid = function(width, height, defaultFertilization) {
 
     const actionDie = (x, y, back, front) => {
         front.fertilizer += back.agent.getMass();
+        back.agent = null;
     };
 
     const actionCopy = (x, y, back, front, context, direction, cost) => {
@@ -74,24 +75,24 @@ const Grid = function(width, height, defaultFertilization) {
 
         front.fertilizer += back.agent.consumeMass(cost);
 
-        const totalMass = back.agent.getMass();
         const newAgent = back.agent.copy();
+        const index = coordsToIndex(
+            x + context.deltas[direction].x,
+            y + context.deltas[direction].y);
 
-        newAgent.setMass(totalMass * 0.5);
-        back.agent.setMass(totalMass * 0.5);
+        newAgent.setMass(Math.ceil(back.agent.getMass() * 0.5));
+        back.agent.setMass(back.agent.getMass() - newAgent.getMass());
 
         front.agent = back.agent;
-        getFront()[coordsToIndex(
-            x + context.deltas[direction].x,
-            y + context.deltas[direction].y)].agent = newAgent;
-        getBack()[coordsToIndex(
-            x + context.deltas[direction].x,
-            y + context.deltas[direction].y)].agent = newAgent;
+        getFront()[index].agent = newAgent;
+        getBack()[index].agent = null;
 
         return true;
     };
 
     const actionEatFertilizer = (x, y, back, front, context, quantity) => {
+        quantity = Math.ceil(quantity);
+
         if (front.fertilizer < quantity)
             return false;
 
@@ -106,14 +107,15 @@ const Grid = function(width, height, defaultFertilization) {
         if (context.access[direction])
             return false;
 
-        back.agent.addMass(context.neighbors[direction].getMass());
-
         const index = coordsToIndex(
             x + context.deltas[direction].x,
             y + context.deltas[direction].y);
 
+        back.agent.addMass(context.neighbors[direction].getMass());
+
         getFront()[index].agent = back.agent;
         getBack()[index].agent = null;
+        back.agent = null;
 
         return true;
     };
@@ -127,6 +129,8 @@ const Grid = function(width, height, defaultFertilization) {
         getFront()[coordsToIndex(
             x + context.deltas[direction].x,
             y + context.deltas[direction].y)].agent = back.agent;
+
+        back.agent = null;
 
         return true;
     };
@@ -143,11 +147,6 @@ const Grid = function(width, height, defaultFertilization) {
             const index = coordsToIndex(x, y);
             const cellBack = getBack()[index];
             const cellFront = getFront()[index];
-
-            _mass += cellBack.fertilizer;
-
-            if (cellBack.agent)
-                _mass += cellBack.agent.getMass();
 
             cellFront.fertilizer = cellBack.fertilizer;
 
@@ -202,10 +201,16 @@ const Grid = function(width, height, defaultFertilization) {
         }
 
         for (let i = 0; i < width * height; ++i) {
-            const cell = getBack()[i];
+            const back = getBack()[i];
+            const front = getFront()[i];
 
-            cell.agent = null;
-            cell.fertilizer = 0;
+            _mass += front.fertilizer;
+
+            if (front.agent)
+                _mass += front.agent.getMass();
+
+            back.agent = null;
+            back.fertilizer = 0;
         }
 
         console.log(_mass);

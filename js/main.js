@@ -19,16 +19,16 @@ simulation.onStep = updateGraphics;
 for (let i = 0; i < 1500; ++i) {
     const plant = new Plant();
 
-    plant.setMass(Math.random() * 5 + 3);
+    plant.setMass(Math.ceil(Math.random() * 5) + 3);
     grid.get(
         Math.floor(Math.random() * grid.getWidth()),
         Math.floor(Math.random() * grid.getHeight())).agent = plant;
 }
 
-for (let i = 0; i < 130; ++i) {
+for (let i = 0; i < 150; ++i) {
     const rabbit = new Rabbit();
 
-    rabbit.setMass(Math.random() * 25 + 5);
+    rabbit.setMass(Math.ceil(Math.random() * 25) + 5);
     grid.get(
         Math.floor(Math.random() * grid.getWidth()),
         Math.floor(Math.random() * grid.getHeight())).agent = rabbit;

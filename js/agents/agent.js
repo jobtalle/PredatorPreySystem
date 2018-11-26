@@ -12,7 +12,7 @@ Agent.prototype = {
     },
 
     consumeMass: function(factor) {
-        const consumed = this.mass * factor;
+        const consumed = Math.ceil(this.mass * factor);
 
         this.mass -= consumed;
 
