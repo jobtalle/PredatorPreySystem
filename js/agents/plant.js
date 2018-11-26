@@ -14,9 +14,10 @@ const Plant = function() {
                     possibleAccess[Math.floor(Math.random() * possibleAccess.length)]);
         }
         else {
-            const quantity = Math.min(Plant.EAT_SPEED, context.fertilizer);
+            const quantity = Math.min(Plant.GROW_SPEED, context.fertilizer);
 
-            return new Action(Action.TYPE_EAT_FERTILIZER, quantity);
+            if (quantity !== 0)
+                return new Action(Action.TYPE_EAT_FERTILIZER, quantity);
         }
 
         return new Action(Action.TYPE_IDLE);
@@ -25,9 +26,6 @@ const Plant = function() {
 
 Plant.prototype = Object.create(Agent.prototype);
 
-Plant.MASS_MIN = 8;
-Plant.MASS_MAX = 12;
-Plant.EAT_SPEED = 0.5;
-Plant.COPY_THRESHOLD = 11;
-Plant.COPY_CHANCE = 0.7;
-Plant.COLOR = "rgb(130, 200, 120)";
+Plant.GROW_SPEED = 6;
+Plant.COPY_THRESHOLD = 50;
+Plant.COLOR = "rgb(110, 180, 100)";

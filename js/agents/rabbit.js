@@ -1,11 +1,10 @@
-const Rabbit = function() {
-    let _direction = Math.floor(Math.random() * 6);
-    let _color = Rabbit.COLOR;
+const Rabbit = function(direction) {
+    let _direction = direction || Math.floor(Math.random() * 6);
 
-    this.getColor = () => _color;
+    this.getColor = () => Rabbit.COLOR;
     this.getType = () => Types.TYPE_RABBIT;
-    this.copy = () => new Rabbit();
-    this.getMinMass = () => 5;
+    this.copy = () => new Rabbit((direction + 3) % 3);
+    this.getMinMass = () => 70;
 
     this.step = context => {
         if (this.getMass() > Rabbit.COPY_THRESHOLD) {
@@ -19,11 +18,8 @@ const Rabbit = function() {
 
         const facing = context.neighbors[_direction];
 
-        if (facing && facing.getType() === Types.TYPE_PLANT) {
-            _color = Rabbit.COLOR_EAT;
-
+        if (facing && facing.getType() === Types.TYPE_PLANT)
             return new Action(Action.TYPE_EAT_AGENT, _direction);
-        }
 
         if (Math.random() < Rabbit.TURN_CHANCE)
             _direction = Math.floor(Math.random() * 6);
@@ -34,7 +30,6 @@ const Rabbit = function() {
 
 Rabbit.prototype = Object.create(Agent.prototype);
 
-Rabbit.COPY_THRESHOLD = 20;
+Rabbit.COPY_THRESHOLD = 500;
 Rabbit.TURN_CHANCE = 0.35;
-Rabbit.COLOR = "rgb(40, 150, 220)";
-Rabbit.COLOR_EAT = "rgb(200, 20, 20)";
+Rabbit.COLOR = "rgb(200, 50, 40)";

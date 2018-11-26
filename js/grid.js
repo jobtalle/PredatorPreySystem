@@ -52,10 +52,21 @@ const Grid = function(width, height, defaultFertilization) {
     };
 
     const spreadFertilizer = (x, y, front, context, amount) => {
-        const perTile = amount / 6;
-        let leftover = 0;
+        const portion = Math.ceil(amount * Grid.SPREAD_FRACTION);
 
-        front.fertilizer += amount;
+        while (amount > 0) {
+            const direction = Math.floor(Math.random() * 7);
+
+            if (direction === 6 || context.access[direction] || context.neighbors[direction]) {
+                const currentPortion = Math.min(portion, amount);
+
+                getFront()[coordsToIndex(
+                    x + context.deltas[direction].x,
+                    y + context.deltas[direction].y)].fertilizer += currentPortion;
+
+                amount -= currentPortion;
+            }
+        }
     };
 
     const actionIdle = (x, y, back, front, context, cost) => {
@@ -73,7 +84,7 @@ const Grid = function(width, height, defaultFertilization) {
         if (!context.access[direction])
             return false;
 
-        front.fertilizer += back.agent.consumeMass(cost);
+        spreadFertilizer(x, y, front, context, back.agent.consumeMass(cost));
 
         const newAgent = back.agent.copy();
         const index = coordsToIndex(
@@ -124,7 +135,7 @@ const Grid = function(width, height, defaultFertilization) {
         if (!context.access[direction])
             return false;
 
-        front.fertilizer += back.agent.consumeMass(cost);
+        spreadFertilizer(x, y, front, context, back.agent.consumeMass(cost));
 
         getFront()[coordsToIndex(
             x + context.deltas[direction].x,
@@ -147,8 +158,6 @@ const Grid = function(width, height, defaultFertilization) {
             const index = coordsToIndex(x, y);
             const cellBack = getBack()[index];
             const cellFront = getFront()[index];
-
-            cellFront.fertilizer = cellBack.fertilizer;
 
             if (!cellBack.agent) {
                 cellBack.fertilizer = 0;
@@ -210,26 +219,27 @@ const Grid = function(width, height, defaultFertilization) {
                 _mass += front.agent.getMass();
 
             back.agent = null;
-            back.fertilizer = 0;
+            back.fertilizer = front.fertilizer;
         }
-
-        console.log(_mass);
     };
 
     initializeGrids();
 };
 
+Grid.SPREAD_FRACTION = 0.5;
 Grid.DELTAS_A = [
     new Vector(1, -1),
     new Vector(1, 0),
     new Vector(0, 1),
     new Vector(-1, 0),
     new Vector(-1, -1),
-    new Vector(0, -1)];
+    new Vector(0, -1),
+    new Vector(0, 0)];
 Grid.DELTAS_B = [
     new Vector(1, 0),
     new Vector(1, 1),
     new Vector(0, 1),
     new Vector(-1, 1),
     new Vector(-1, 0),
-    new Vector(0, -1)];
+    new Vector(0, -1),
+    new Vector(0, 0)];
