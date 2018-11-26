@@ -34,7 +34,7 @@ const Rabbit = function() {
 
 Rabbit.prototype = Object.create(Agent.prototype);
 
-Rabbit.COPY_THRESHOLD = 50;
+Rabbit.COPY_THRESHOLD = 20;
 Rabbit.TURN_CHANCE = 0.35;
 Rabbit.COLOR = "rgb(40, 150, 220)";
 Rabbit.COLOR_EAT = "rgb(200, 20, 20)";

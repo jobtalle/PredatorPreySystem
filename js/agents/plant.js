@@ -2,7 +2,7 @@ const Plant = function() {
     this.getColor = () => Plant.COLOR;
     this.getType = () => Types.TYPE_PLANT;
     this.copy = () => new Plant();
-    this.getMinMass = () => 0;
+    this.getMinMass = () => 3;
 
     this.step = context => {
         if (this.getMass() > Plant.COPY_THRESHOLD) {
@@ -27,7 +27,7 @@ Plant.prototype = Object.create(Agent.prototype);
 
 Plant.MASS_MIN = 8;
 Plant.MASS_MAX = 12;
-Plant.EAT_SPEED = 1;
-Plant.COPY_THRESHOLD = 10;
+Plant.EAT_SPEED = 0.5;
+Plant.COPY_THRESHOLD = 11;
 Plant.COPY_CHANCE = 0.7;
 Plant.COLOR = "rgb(130, 200, 120)";

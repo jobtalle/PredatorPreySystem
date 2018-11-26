@@ -51,9 +51,17 @@ const Grid = function(width, height, defaultFertilization) {
         return new Context(neighbors, access, deltas, getBack()[coordsToIndex(x, y)].fertilizer);
     };
 
-    const actionIdle = (x, y, back, front, cost) => {
+    const spreadFertilizer = (x, y, front, context, amount) => {
+        const perTile = amount / 6;
+        let leftover = 0;
+
+        front.fertilizer += amount;
+    };
+
+    const actionIdle = (x, y, back, front, context, cost) => {
         front.agent = back.agent;
-        front.fertilizer += front.agent.consumeMass(cost);
+
+        spreadFertilizer(x, y, front, context, front.agent.consumeMass(cost));
     };
 
     const actionDie = (x, y, back, front) => {
@@ -76,17 +84,20 @@ const Grid = function(width, height, defaultFertilization) {
         getFront()[coordsToIndex(
             x + context.deltas[direction].x,
             y + context.deltas[direction].y)].agent = newAgent;
+        getBack()[coordsToIndex(
+            x + context.deltas[direction].x,
+            y + context.deltas[direction].y)].agent = newAgent;
 
         return true;
     };
 
     const actionEatFertilizer = (x, y, back, front, context, quantity) => {
-        if (back.fertilizer < quantity)
+        if (front.fertilizer < quantity)
             return false;
 
         front.agent = back.agent;
         front.agent.addMass(quantity);
-        front.fertilizer = back.fertilizer - quantity;
+        front.fertilizer -= quantity;
 
         return true;
     };
@@ -160,7 +171,7 @@ const Grid = function(width, height, defaultFertilization) {
 
             switch (action.type) {
                 case Action.TYPE_IDLE:
-                    actionIdle(x, y, cellBack, cellFront, costIdle);
+                    actionIdle(x, y, cellBack, cellFront, context, costIdle);
 
                     break;
                 case Action.TYPE_DIE:
@@ -169,22 +180,22 @@ const Grid = function(width, height, defaultFertilization) {
                     break;
                 case Action.TYPE_COPY:
                     if (!actionCopy(x, y, cellBack, cellFront, context, action.arg0, costCopy))
-                        actionIdle(x, y, cellBack, cellFront, costIdle);
+                        actionIdle(x, y, cellBack, cellFront, context, costIdle);
 
                     break;
                 case Action.TYPE_EAT_FERTILIZER:
                     if (!actionEatFertilizer(x, y, cellBack, cellFront, context, action.arg0))
-                        actionIdle(x, y, cellBack, cellFront, costIdle);
+                        actionIdle(x, y, cellBack, cellFront, context, costIdle);
 
                     break;
                 case Action.TYPE_EAT_AGENT:
                     if (!actionEatAgent(x, y, cellBack, cellFront, context, action.arg0))
-                        actionIdle(x, y, cellBack, cellFront, costIdle);
+                        actionIdle(x, y, cellBack, cellFront, context, costIdle);
 
                     break;
                 case Action.TYPE_MOVE:
                     if (!actionMove(x, y, cellBack, cellFront, context, action.arg0, costMove))
-                        actionIdle(x, y, cellBack, cellFront, costIdle);
+                        actionIdle(x, y, cellBack, cellFront, context, costIdle);
 
                     break;
             }
