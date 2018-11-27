@@ -170,17 +170,11 @@ const Grid = function(width, height, maxFertilization) {
             const cellBack = getBack()[index];
             const cellFront = getFront()[index];
 
-            if (!cellBack.agent) {
-                cellBack.fertilizer = 0;
-
+            if (!cellBack.agent)
                 continue;
-            }
 
             if (cellBack.agent.getMass() < cellBack.agent.getMinMass()) {
                 actionDie(x, y, cellBack, cellFront);
-
-                cellBack.agent = null;
-                cellBack.fertilizer = 0;
 
                 continue;
             }
