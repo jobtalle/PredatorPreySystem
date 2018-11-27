@@ -16,6 +16,6 @@ const Simulation = function(grid) {
     };
 };
 
-Simulation.COST_MOVE = 0.05;
+Simulation.COST_MOVE = 0.1;
 Simulation.COST_IDLE = 0.2;
 Simulation.COST_COPY = 0.1;
