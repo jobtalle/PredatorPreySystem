@@ -30,6 +30,6 @@ const Rabbit = function(direction) {
 
 Rabbit.prototype = Object.create(Agent.prototype);
 
-Rabbit.COPY_THRESHOLD = 800;
+Rabbit.COPY_THRESHOLD = 600;
 Rabbit.TURN_CHANCE = 0.5;
 Rabbit.COLOR = "rgb(200, 50, 40)";

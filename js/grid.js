@@ -17,7 +17,8 @@ const Grid = function(width, height, maxFertilization) {
                 const index = coordsToIndex(x, y);
                 const fertilization = Math.ceil(
                     maxFertilization *
-                    1);
+                    (-Math.cos(Math.PI * x * 2 / width) + 1) * 0.5 *
+                    (-Math.cos(Math.PI * y * 2 / height) + 1) * 0.5);
 
                 grid[index] = new GridPoint(null, fertilization);
             }
@@ -232,31 +233,6 @@ const Grid = function(width, height, maxFertilization) {
                         actionIdle(x, y, cellBack, cellFront, context, costIdle);
 
                     break;
-            }
-        }
-
-        for (let y = 0; y < height; ++y) for (let x = 0; x < width; ++x) {
-            const index = coordsToIndex(x, y);
-            const cellBack = getBack()[index];
-            const cellFront = getFront()[index];
-            const dy = y + 15 * Math.sin(x / 18) - height * 0.5;
-            const quantity = 5;
-
-            if (cellBack.fertilizer < quantity)
-                continue;
-
-            const direction = ((dy > 0?4:1) + Math.floor(Math.random() * 2)) % 6;
-            const context = makeContext(x, y);
-
-            if (context.access[direction]) {
-                const goalFront = getFront()[coordsToIndex(
-                    x + context.deltas[direction].x,
-                    y + context.deltas[direction].y)];
-
-                if (goalFront.fertilizer < cellFront.fertilizer * 1.2) {
-                    cellFront.fertilizer -= quantity;
-                    goalFront.fertilizer += quantity;
-                }
             }
         }
 

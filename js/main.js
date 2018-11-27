@@ -5,7 +5,7 @@ const canvasGraph = document.getElementById("graph");
 const grid = new Grid(
     Math.floor((canvasRenderer.width - hexRadius * 0.5) / (hexRadius * 1.5)),
     Math.floor((canvasRenderer.height - Math.sqrt(3) * hexRadius * 0.5) / (Math.sqrt(3) * hexRadius)),
-    70);
+    250);
 const simulation = new Simulation(grid);
 const gridRenderer = new GridRenderer(canvasRenderer, grid, hexRadius);
 const graphRenderer = new GraphRenderer(canvasGraph, grid, [
