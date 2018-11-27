@@ -245,7 +245,7 @@ const Grid = function(width, height, maxFertilization) {
             if (cellBack.fertilizer < quantity)
                 continue;
 
-            const direction = dy > 0?5:2;
+            const direction = ((dy > 0?4:1) + Math.floor(Math.random() * 2)) % 6;
             const context = makeContext(x, y);
 
             if (context.access[direction]) {
