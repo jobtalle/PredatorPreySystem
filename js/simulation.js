@@ -17,5 +17,5 @@ const Simulation = function(grid) {
 };
 
 Simulation.COST_MOVE = 0.1;
-Simulation.COST_IDLE = 0.1;
+Simulation.COST_IDLE = 0.01;
 Simulation.COST_COPY = 0.1;

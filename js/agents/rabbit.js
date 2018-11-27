@@ -24,12 +24,17 @@ const Rabbit = function(direction) {
         if (Math.random() < Rabbit.TURN_CHANCE)
             _direction = Math.floor(Math.random() * 6);
 
+        if (this.getMass() < Rabbit.IDLE_THRESHOLD && Math.random() < Rabbit.IDLE_CHANCE)
+            return new Action(Action.TYPE_IDLE);
+
         return new Action(Action.TYPE_MOVE, _direction);
     };
 };
 
 Rabbit.prototype = Object.create(Agent.prototype);
 
-Rabbit.COPY_THRESHOLD = 600;
+Rabbit.IDLE_CHANCE = 0.7;
+Rabbit.IDLE_THRESHOLD = 200;
+Rabbit.COPY_THRESHOLD = 1200;
 Rabbit.TURN_CHANCE = 0.5;
 Rabbit.COLOR = "rgb(200, 50, 40)";
