@@ -26,6 +26,6 @@ const Plant = function() {
 
 Plant.prototype = Object.create(Agent.prototype);
 
-Plant.GROW_SPEED = 5;
-Plant.COPY_THRESHOLD = 50;
+Plant.GROW_SPEED = 15;
+Plant.COPY_THRESHOLD = 150;
 Plant.COLOR = "rgb(110, 180, 100)";

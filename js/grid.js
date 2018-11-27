@@ -55,7 +55,9 @@ const Grid = function(width, height, maxFertilization) {
         const access = new Array(6);
 
         for (let direction = 0; direction < 6; ++direction) {
-            neighbors[direction] = getBack()[coordsToIndex(x + deltas[direction].x, y + deltas[direction].y)].agent;
+            const cell = getBack()[coordsToIndex(x + deltas[direction].x, y + deltas[direction].y)];
+
+            neighbors[direction] = cell.agent;
             access[direction] = isFree(x + deltas[direction].x, y + deltas[direction].y);
         }
 
@@ -82,6 +84,7 @@ const Grid = function(width, height, maxFertilization) {
 
     const actionIdle = (x, y, back, front, context, cost) => {
         front.agent = back.agent;
+        front.fertilizer += front.agent.consumeMass(cost);
 
         spreadFertilizer(x, y, front, context, front.agent.consumeMass(cost));
     };
@@ -115,11 +118,29 @@ const Grid = function(width, height, maxFertilization) {
     const actionEatFertilizer = (x, y, back, front, context, quantity) => {
         quantity = Math.ceil(quantity);
 
-        if (front.fertilizer < quantity)
+        if (context.fertilizer < quantity)
             return false;
 
         front.agent = back.agent;
         front.agent.addMass(quantity);
+
+        if (quantity > 1) {
+            const access = context.getAccess();
+
+            if (access.length) {
+                const accessQuantity = Math.ceil(quantity * Grid.EAT_FERTILIZER_SPREAD);
+                const direction = access[Math.floor(Math.random() * access.length)];
+                const index = coordsToIndex(
+                    x + context.deltas[direction].x,
+                    y + context.deltas[direction].y);
+
+                if (getFront()[index].fertilizer >= accessQuantity) {
+                    quantity -= accessQuantity;
+                    getFront()[index].fertilizer -= accessQuantity;
+                }
+            }
+        }
+
         front.fertilizer -= quantity;
 
         return true;
@@ -214,6 +235,31 @@ const Grid = function(width, height, maxFertilization) {
             }
         }
 
+        for (let y = 0; y < height; ++y) for (let x = 0; x < width; ++x) {
+            const index = coordsToIndex(x, y);
+            const cellBack = getBack()[index];
+            const cellFront = getFront()[index];
+            const dy = y + 15 * Math.sin(x / 18) - height * 0.5;
+            const quantity = 5;
+
+            if (cellBack.fertilizer < quantity)
+                continue;
+
+            const direction = dy > 0?5:2;
+            const context = makeContext(x, y);
+
+            if (context.access[direction]) {
+                const goalFront = getFront()[coordsToIndex(
+                    x + context.deltas[direction].x,
+                    y + context.deltas[direction].y)];
+
+                if (goalFront.fertilizer < cellFront.fertilizer * 1.2) {
+                    cellFront.fertilizer -= quantity;
+                    goalFront.fertilizer += quantity;
+                }
+            }
+        }
+
         _histogram.fill(0);
         _fertilizer = 0;
 
@@ -249,6 +295,7 @@ const Grid = function(width, height, maxFertilization) {
     initializeGrids();
 };
 
+Grid.EAT_FERTILIZER_SPREAD = 0.1;
 Grid.SPREAD_FRACTION = 0.5;
 Grid.DELTAS_A = [
     new Vector(1, -1),
