@@ -17,8 +17,7 @@ const Grid = function(width, height, maxFertilization) {
                 const index = coordsToIndex(x, y);
                 const fertilization = Math.ceil(
                     maxFertilization *
-                    (-Math.cos(Math.PI * x * 2 / width) + 1) * 0.5 *
-                    (-Math.cos(Math.PI * y * 2 / height) + 1) * 0.5);
+                    1);
 
                 grid[index] = new GridPoint(null, fertilization);
             }
