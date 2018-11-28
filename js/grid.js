@@ -85,13 +85,13 @@ const Grid = function(width, height, maxFertilization) {
 
     const actionIdle = (x, y, back, front, context, cost) => {
         front.agent = back.agent;
-        front.fertilizer += front.agent.consumeMass(cost);
 
         spreadFertilizer(x, y, front, context, front.agent.consumeMass(cost));
     };
 
-    const actionDie = (x, y, back, front) => {
-        front.fertilizer += back.agent.getMass();
+    const actionDie = (x, y, context, back, front) => {
+        spreadFertilizer(x, y, front, context, back.agent.getMass());
+
         back.agent = null;
     };
 
@@ -117,7 +117,8 @@ const Grid = function(width, height, maxFertilization) {
     };
 
     const actionEatFertilizer = (x, y, back, front, context, quantity) => {
-        quantity = Math.min(context.fertilizer, Math.ceil(quantity));
+        if (context.fertilizer < quantity)
+            return false;
 
         front.agent = back.agent;
         front.agent.addMass(quantity);
@@ -192,13 +193,14 @@ const Grid = function(width, height, maxFertilization) {
             if (!cellBack.agent)
                 continue;
 
+            const context = makeContext(x, y);
+
             if (cellBack.agent.getMass() < cellBack.agent.getMinMass()) {
-                actionDie(x, y, cellBack, cellFront);
+                actionDie(x, y, context, cellBack, cellFront);
 
                 continue;
             }
 
-            const context = makeContext(x, y);
             const action = cellBack.agent.step(context);
 
             switch (action.type) {
@@ -207,7 +209,7 @@ const Grid = function(width, height, maxFertilization) {
 
                     break;
                 case Action.TYPE_DIE:
-                    actionDie(x, y, cellBack, cellFront);
+                    actionDie(x, y, context, cellBack, cellFront);
 
                     break;
                 case Action.TYPE_COPY:
@@ -272,7 +274,7 @@ const Grid = function(width, height, maxFertilization) {
 };
 
 Grid.EAT_FERTILIZER_SPREAD = 0.1;
-Grid.SPREAD_FRACTION = 0.5;
+Grid.SPREAD_FRACTION = 0.4;
 Grid.DELTAS_A = [
     new Vector(1, -1),
     new Vector(1, 0),

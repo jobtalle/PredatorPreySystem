@@ -3,7 +3,7 @@ const Fox = function(direction) {
 
     this.getType = () => Types.TYPE_FOX;
     this.copy = () => new Fox((direction + 3) % 3);
-    this.getMinMass = () => 70;
+    this.getMinMass = () => Fox.MASS_MIN;
 
     this.step = context => {
         if (this.getMass() > Fox.COPY_THRESHOLD) {
@@ -32,7 +32,8 @@ const Fox = function(direction) {
 
 Fox.prototype = Object.create(Agent.prototype);
 
+Fox.MASS_MIN = 70;
 Fox.IDLE_CHANCE = 0.7;
 Fox.IDLE_THRESHOLD = 200;
-Fox.COPY_THRESHOLD = 1200;
+Fox.COPY_THRESHOLD = 1500;
 Fox.TURN_CHANCE = 0.5;

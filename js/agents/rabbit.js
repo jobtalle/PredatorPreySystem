@@ -3,7 +3,7 @@ const Rabbit = function(direction) {
 
     this.getType = () => Types.TYPE_RABBIT;
     this.copy = () => new Rabbit((direction + 3) % 3);
-    this.getMinMass = () => 70;
+    this.getMinMass = () => Rabbit.MASS_MIN;
 
     this.step = context => {
         if (this.getMass() > Rabbit.COPY_THRESHOLD) {
@@ -32,7 +32,8 @@ const Rabbit = function(direction) {
 
 Rabbit.prototype = Object.create(Agent.prototype);
 
+Rabbit.MASS_MIN = 70;
 Rabbit.IDLE_CHANCE = 0.7;
 Rabbit.IDLE_THRESHOLD = 200;
-Rabbit.COPY_THRESHOLD = 1200;
+Rabbit.COPY_THRESHOLD = 1500;
 Rabbit.TURN_CHANCE = 0.5;
