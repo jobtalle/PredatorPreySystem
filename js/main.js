@@ -10,7 +10,8 @@ const simulation = new Simulation(grid);
 const gridRenderer = new GridRenderer(canvasRenderer, grid, hexRadius);
 const graphRenderer = new GraphRenderer(canvasGraph, grid, [
     new Graph(Types.TYPE_PLANT, ColorsLow[Types.TYPE_PLANT]),
-    new Graph(Types.TYPE_RABBIT, ColorsLow[Types.TYPE_RABBIT])]);
+    new Graph(Types.TYPE_RABBIT, ColorsLow[Types.TYPE_RABBIT]),
+    new Graph(Types.TYPE_FOX, ColorsLow[Types.TYPE_FOX])]);
 const gui = new Gui(simulation);
 
 const updateGraphics = () => {
@@ -30,13 +31,22 @@ for (let i = 0; i < 1500; ++i) {
         Math.floor(Math.random() * grid.getHeight())).agent = plant;
 }
 
-for (let i = 0; i < 150; ++i) {
+for (let i = 0; i < 75; ++i) {
     const rabbit = new Rabbit();
 
     rabbit.setMass(Math.ceil(Math.random() * 500));
     grid.get(
         Math.floor(Math.random() * grid.getWidth()),
         Math.floor(Math.random() * grid.getHeight())).agent = rabbit;
+}
+
+for (let i = 0; i < 75; ++i) {
+    const fox = new Fox();
+
+    fox.setMass(Math.ceil(Math.random() * 500));
+    grid.get(
+        Math.floor(Math.random() * grid.getWidth()),
+        Math.floor(Math.random() * grid.getHeight())).agent = fox;
 }
 
 graphRenderer.gauge();

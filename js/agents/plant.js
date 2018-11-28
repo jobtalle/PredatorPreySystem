@@ -12,12 +12,8 @@ const Plant = function() {
                     Action.TYPE_COPY,
                     possibleAccess[Math.floor(Math.random() * possibleAccess.length)]);
         }
-        else {
-            const quantity = Math.min(Plant.GROW_SPEED, context.fertilizer);
-
-            if (quantity !== 0)
-                return new Action(Action.TYPE_EAT_FERTILIZER, quantity);
-        }
+        else
+            return new Action(Action.TYPE_EAT_FERTILIZER, Plant.EAT_SPEED);
 
         return new Action(Action.TYPE_IDLE);
     };
@@ -25,5 +21,5 @@ const Plant = function() {
 
 Plant.prototype = Object.create(Agent.prototype);
 
-Plant.GROW_SPEED = 5;
+Plant.EAT_SPEED = 5;
 Plant.COPY_THRESHOLD = 120;
