@@ -25,6 +25,9 @@ const GraphRenderer = function(canvas, legend, grid, graphs) {
         for (const graph of graphs)
             element.appendChild(createLegendEntry(graph));
 
+        while (legend.firstChild)
+            legend.remove(legend.firstChild);
+
         legend.appendChild(element);
     };
 
@@ -65,8 +68,6 @@ const GraphRenderer = function(canvas, legend, grid, graphs) {
 
     this.gauge = () => {
         _totalMass = grid.getMass();
-
-        console.log("Total mass = " + _totalMass);
     };
 
     this.render = () => {

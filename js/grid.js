@@ -268,6 +268,9 @@ const Grid = function(width, height, maxFertilization) {
         return mass;
     };
 
+    this.getWidth = () => width;
+    this.getHeight = () => height;
+
     initializeGrids();
 };
 

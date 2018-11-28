@@ -1,22 +1,48 @@
 :root {
     --legend-padding: 5px;
+    font-family: monospace;
+    font-size: 12pt;
+}
+
+#grid-wrapper {
+    position: relative;
+}
+
+#grid-wrapper #grid-legend {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#grid-wrapper #grid-legend .legend {
+    position: absolute;
+    left: 0;
+    top: var(--legend-padding);
+    background-color: #00000060;
+    white-space: nowrap;
+    padding: var(--legend-padding);
+}
+
+#grid-wrapper #grid-legend .legend .line {
+    float: left;
+    color: white;
 }
 
 #graph-wrapper {
     position: relative;
 }
 
-#graph-legend {
+#graph-wrapper #graph-legend {
     position: absolute;
     left: 0;
     bottom: var(--legend-padding);
 }
 
-#graph-legend .legend {
+#graph-wrapper #graph-legend .legend {
     width: 120px;
 }
 
-#graph-legend .legend .legend-entry {
+#graph-wrapper #graph-legend .legend .legend-entry {
     font-weight: bold;
     color: white;
     padding: 3px;
