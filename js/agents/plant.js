@@ -1,5 +1,4 @@
 const Plant = function() {
-    this.getColor = () => Plant.COLOR;
     this.getType = () => Types.TYPE_PLANT;
     this.copy = () => new Plant();
     this.getMinMass = () => 5;
@@ -26,6 +25,5 @@ const Plant = function() {
 
 Plant.prototype = Object.create(Agent.prototype);
 
-Plant.GROW_SPEED = 6;
+Plant.GROW_SPEED = 5;
 Plant.COPY_THRESHOLD = 120;
-Plant.COLOR = "rgb(110, 180, 100)";

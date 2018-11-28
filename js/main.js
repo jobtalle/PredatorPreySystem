@@ -1,4 +1,4 @@
-const hexRadius = 7;
+const hexRadius = 8;
 const canvasRenderer = document.getElementById("grid");
 const canvasGraph = document.getElementById("graph");
 
@@ -9,8 +9,8 @@ const grid = new Grid(
 const simulation = new Simulation(grid);
 const gridRenderer = new GridRenderer(canvasRenderer, grid, hexRadius);
 const graphRenderer = new GraphRenderer(canvasGraph, grid, [
-    new Graph(Types.TYPE_PLANT, Plant.COLOR),
-    new Graph(Types.TYPE_RABBIT, Rabbit.COLOR)]);
+    new Graph(Types.TYPE_PLANT, ColorsLow[Types.TYPE_PLANT]),
+    new Graph(Types.TYPE_RABBIT, ColorsLow[Types.TYPE_RABBIT])]);
 const gui = new Gui(simulation);
 
 const updateGraphics = () => {
@@ -42,6 +42,8 @@ for (let i = 0; i < 150; ++i) {
 graphRenderer.gauge();
 
 updateGraphics();
+updateGraphics();
+
 setInterval(() => {
     if (gui.isRunning())
         simulation.step();

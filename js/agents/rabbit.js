@@ -1,7 +1,6 @@
 const Rabbit = function(direction) {
     let _direction = direction || Math.floor(Math.random() * 6);
 
-    this.getColor = () => Rabbit.COLOR;
     this.getType = () => Types.TYPE_RABBIT;
     this.copy = () => new Rabbit((direction + 3) % 3);
     this.getMinMass = () => 70;
@@ -37,4 +36,3 @@ Rabbit.IDLE_CHANCE = 0.7;
 Rabbit.IDLE_THRESHOLD = 200;
 Rabbit.COPY_THRESHOLD = 1200;
 Rabbit.TURN_CHANCE = 0.5;
-Rabbit.COLOR = "rgb(200, 50, 40)";
