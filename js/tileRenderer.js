@@ -24,12 +24,12 @@ const TileRenderer = function(width, height, radius, colorLow, colorHigh) {
         context.fillStyle = color;
 
         context.beginPath();
-        context.moveTo(width * 0.25 - 0.5, 0);
-        context.lineTo(width * 0.75 + 0.5, 0);
-        context.lineTo(width + 0.5, height * 0.5);
-        context.lineTo(width * 0.75 + 0.5, height);
-        context.lineTo(width * 0.25 - 0.5, height);
-        context.lineTo(-0.5, height * 0.5);
+        context.moveTo(width * 0.25, 0);
+        context.lineTo(width * 0.75, 0);
+        context.lineTo(width, height * 0.5);
+        context.lineTo(width * 0.75, height);
+        context.lineTo(width * 0.25, height);
+        context.lineTo(0, height * 0.5);
         context.fill();
     };
 
@@ -60,7 +60,7 @@ const TileRenderer = function(width, height, radius, colorLow, colorHigh) {
     };
 
     this.render = (context, x, y, mass) => {
-        context.drawImage(sample(mass), x - width * 0.5, y - height * 0.5);
+        context.drawImage(sample(mass), x, y);
     };
 
     makeImages();

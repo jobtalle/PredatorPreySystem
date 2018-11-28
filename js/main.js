@@ -1,4 +1,4 @@
-const hexRadius = 8;
+const hexRadius = 7;
 const canvasGrid = document.getElementById("grid");
 const legendGrid = document.getElementById("grid-legend");
 const canvasGraph = document.getElementById("graph");
@@ -6,7 +6,7 @@ const legendGraph = document.getElementById("graph-legend");
 
 const grid = new Grid(
     Math.floor((canvasGrid.width - hexRadius * 0.5) / (hexRadius * 1.5)),
-    Math.floor((canvasGrid.height - Math.sqrt(3) * hexRadius * 0.5) / (Math.sqrt(3) * hexRadius)),
+    Math.floor((canvasGrid.height - 0.5 * Math.ceil(Math.sqrt(3) * hexRadius)) / Math.ceil(Math.sqrt(3) * hexRadius)),
     290);
 const simulation = new Simulation(grid);
 const gridRenderer = new GridRenderer(canvasGrid, legendGrid, grid, hexRadius);

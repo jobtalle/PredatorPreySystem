@@ -117,10 +117,7 @@ const Grid = function(width, height, maxFertilization) {
     };
 
     const actionEatFertilizer = (x, y, back, front, context, quantity) => {
-        quantity = Math.ceil(quantity);
-
-        if (context.fertilizer < quantity)
-            return false;
+        quantity = Math.min(context.fertilizer, Math.ceil(quantity));
 
         front.agent = back.agent;
         front.agent.addMass(quantity);
@@ -148,7 +145,7 @@ const Grid = function(width, height, maxFertilization) {
     };
 
     const actionEatAgent = (x, y, back, front, context, direction) => {
-        if (context.access[direction])
+        if (context.access[direction] || !context.neighbors[direction])
             return false;
 
         const index = coordsToIndex(

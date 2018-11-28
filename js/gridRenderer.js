@@ -3,8 +3,8 @@ const GridRenderer = function(canvas, legend, grid, radius) {
     const _cellHeight = Math.ceil(Math.sqrt(3) * radius);
     const _tileRenderers = [];
 
-    const getX = x => _cellWidth * (0.5 + x * 0.75);
-    const getY = (x, y) => _cellHeight * (0.5 + y + (x & 1) * 0.5);
+    const getX = x => _cellWidth * (x * 0.75);
+    const getY = (x, y) => _cellHeight * (y + (x & 1) * 0.5);
 
     const createLegendLine = text => {
         const element = document.createElement("div");
