@@ -1,6 +1,7 @@
 const hexRadius = 8;
 const canvasRenderer = document.getElementById("grid");
 const canvasGraph = document.getElementById("graph");
+const divLegend = document.getElementById("graph-legend");
 
 const grid = new Grid(
     Math.floor((canvasRenderer.width - hexRadius * 0.5) / (hexRadius * 1.5)),
@@ -8,10 +9,10 @@ const grid = new Grid(
     250);
 const simulation = new Simulation(grid);
 const gridRenderer = new GridRenderer(canvasRenderer, grid, hexRadius);
-const graphRenderer = new GraphRenderer(canvasGraph, grid, [
-    new Graph(Types.TYPE_PLANT, ColorsLow[Types.TYPE_PLANT]),
-    new Graph(Types.TYPE_RABBIT, ColorsLow[Types.TYPE_RABBIT]),
-    new Graph(Types.TYPE_FOX, ColorsLow[Types.TYPE_FOX])]);
+const graphRenderer = new GraphRenderer(canvasGraph, divLegend, grid, [
+    new Graph(Types.TYPE_PLANT, ColorsLow[Types.TYPE_PLANT], "Plant"),
+    new Graph(Types.TYPE_RABBIT, ColorsLow[Types.TYPE_RABBIT], "Rabbit 1"),
+    new Graph(Types.TYPE_FOX, ColorsLow[Types.TYPE_FOX], "Rabbit 2")]);
 const gui = new Gui(simulation);
 
 const updateGraphics = () => {

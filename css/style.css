@@ -1,0 +1,24 @@
+:root {
+    --legend-padding: 5px;
+}
+
+#graph-wrapper {
+    position: relative;
+}
+
+#graph-legend {
+    position: absolute;
+    left: 0;
+    bottom: var(--legend-padding);
+}
+
+#graph-legend .legend {
+    width: 120px;
+}
+
+#graph-legend .legend .legend-entry {
+    font-weight: bold;
+    color: white;
+    padding: 3px;
+    margin: var(--legend-padding);
+}

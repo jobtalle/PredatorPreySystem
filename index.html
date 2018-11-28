@@ -8,13 +8,16 @@
 <body>
     <div id="wrapper">
         <canvas id="grid" width="1400" height="600"></canvas>
-        <canvas id="graph" width="1400" height="200"></canvas>
+        <div id="graph-wrapper">
+            <canvas id="graph" width="1400" height="200"></canvas>
+            <div id="graph-legend"></div>
+        </div>
         <div id="controls">
             <label>
                 <input id="controls-frame" type="text" readonly>
             </label>
-            <button id="controls-stop">Stop</button>
-            <button id="controls-start">Start</button>
+            <button id="controls-stop">◼</button>
+            <button id="controls-play">►</button>
             <button id="controls-step">Step</button>
         </div>
     </div>

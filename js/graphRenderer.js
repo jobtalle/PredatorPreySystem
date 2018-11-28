@@ -1,4 +1,4 @@
-const GraphRenderer = function(canvas, grid, graphs) {
+const GraphRenderer = function(canvas, legend, grid, graphs) {
     const _frames = [canvas.cloneNode(), canvas.cloneNode()];
 
     let _totalMass = 0;
@@ -6,6 +6,27 @@ const GraphRenderer = function(canvas, grid, graphs) {
     let _history = 0;
 
     const flip = () => _front = 1 - _front;
+
+    const createLegendEntry = graph => {
+        const element = document.createElement("div");
+
+        element.className = "legend-entry";
+        element.appendChild(document.createTextNode(graph.name));
+        element.style.backgroundColor = graph.color;
+
+        return element;
+    };
+
+    const createLegend = () => {
+        const element = document.createElement("div");
+
+        element.className = "legend";
+
+        for (const graph of graphs)
+            element.appendChild(createLegendEntry(graph));
+
+        legend.appendChild(element);
+    };
 
     const renderBiomass = context => {
         const x = canvas.width - 0.5;
@@ -57,6 +78,8 @@ const GraphRenderer = function(canvas, grid, graphs) {
 
         ++_history;
     };
+
+    createLegend();
 };
 
 GraphRenderer.COLOR_BIOMASS = "rgb(222, 222, 222)";
