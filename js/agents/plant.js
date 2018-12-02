@@ -24,6 +24,6 @@ Plant.prototype = Object.create(Agent.prototype);
 
 Plant.EAT_SPEED = 5;
 Plant.MASS_MIN = 5;
-Plant.COPY_THRESHOLD = 160;
-Plant.COPY_THRESHOLD_MAX = 180;
+Plant.COPY_THRESHOLD = 130;
+Plant.COPY_THRESHOLD_MAX = 150;
 Plant.COPY_CHANCE = 0.3;

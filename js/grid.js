@@ -149,6 +149,9 @@ const Grid = function(width, height, maxFertilization) {
         if (context.access[direction] || !context.neighbors[direction])
             return false;
 
+        if (context.neighbors[direction].getMass() > back.agent.getMass() * 0.5)
+            return false;
+
         const index = coordsToIndex(
             x + context.deltas[direction].x,
             y + context.deltas[direction].y);

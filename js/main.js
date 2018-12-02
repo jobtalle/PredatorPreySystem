@@ -7,7 +7,7 @@ const legendGraph = document.getElementById("graph-legend");
 const grid = new Grid(
     Math.floor((canvasGrid.width - hexRadius * 0.5) / (hexRadius * 1.5)),
     Math.floor((canvasGrid.height - 0.5 * Math.ceil(Math.sqrt(3) * hexRadius)) / Math.ceil(Math.sqrt(3) * hexRadius)),
-    500);
+    400);
 const simulation = new Simulation(grid);
 const gridRenderer = new GridRenderer(canvasGrid, legendGrid, grid, hexRadius);
 const graphRenderer = new GraphRenderer(canvasGraph, legendGraph, grid, [
@@ -37,7 +37,7 @@ simulation.onStep = updateGraphics;
 
 scatter(Plant, 0.5);
 scatter(Rabbit, 0.02);
-scatter(Fox, 0.02);
+//scatter(Fox, 0.02);
 
 gridRenderer.gauge();
 graphRenderer.gauge();
