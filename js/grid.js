@@ -51,9 +51,9 @@ const Grid = function(width, height, maxFertilization) {
     };
 
     const makeContext = (x, y) => {
-        const deltas = getDeltas(x);
         const neighbors = new Array(6);
         const access = new Array(6);
+        const deltas = getDeltas(x);
 
         for (let direction = 0; direction < 6; ++direction) {
             const cell = getBack()[coordsToIndex(x + deltas[direction].x, y + deltas[direction].y)];
@@ -62,7 +62,7 @@ const Grid = function(width, height, maxFertilization) {
             access[direction] = isFree(x + deltas[direction].x, y + deltas[direction].y);
         }
 
-        return new Context(neighbors, access, deltas, getBack()[coordsToIndex(x, y)].fertilizer);
+        return new Context(neighbors, access, getBack()[coordsToIndex(x, y)].fertilizer);
     };
 
     const spreadFertilizer = (x, y, front, context, amount) => {
@@ -73,10 +73,11 @@ const Grid = function(width, height, maxFertilization) {
 
             if (direction === 6 || context.access[direction] || context.neighbors[direction]) {
                 const currentPortion = Math.min(portion, amount);
+                const deltas = getDeltas(x);
 
                 getFront()[coordsToIndex(
-                    x + context.deltas[direction].x,
-                    y + context.deltas[direction].y)].fertilizer += currentPortion;
+                    x + deltas[direction].x,
+                    y + deltas[direction].y)].fertilizer += currentPortion;
 
                 amount -= currentPortion;
             }
@@ -102,9 +103,10 @@ const Grid = function(width, height, maxFertilization) {
         spreadFertilizer(x, y, front, context, back.agent.consumeMass(cost));
 
         const newAgent = back.agent.copy();
+        const deltas = getDeltas(x);
         const index = coordsToIndex(
-            x + context.deltas[direction].x,
-            y + context.deltas[direction].y);
+            x + deltas[direction].x,
+            y + deltas[direction].y);
 
         newAgent.setMass(Math.ceil(back.agent.getMass() * 0.5));
         back.agent.setMass(back.agent.getMass() - newAgent.getMass());
@@ -129,9 +131,10 @@ const Grid = function(width, height, maxFertilization) {
             if (access.length) {
                 const accessQuantity = Math.ceil(quantity * Grid.EAT_FERTILIZER_SPREAD);
                 const direction = access[Math.floor(Math.random() * access.length)];
+                const deltas = getDeltas(x);
                 const index = coordsToIndex(
-                    x + context.deltas[direction].x,
-                    y + context.deltas[direction].y);
+                    x + deltas[direction].x,
+                    y + deltas[direction].y);
 
                 if (getFront()[index].fertilizer >= accessQuantity) {
                     quantity -= accessQuantity;
@@ -152,9 +155,10 @@ const Grid = function(width, height, maxFertilization) {
         if (context.neighbors[direction].getMass() > back.agent.getMass() * 0.5)
             return false;
 
+        const deltas = getDeltas(x);
         const index = coordsToIndex(
-            x + context.deltas[direction].x,
-            y + context.deltas[direction].y);
+            x + deltas[direction].x,
+            y + deltas[direction].y);
 
         back.agent.addMass(context.neighbors[direction].getMass());
 
@@ -171,9 +175,11 @@ const Grid = function(width, height, maxFertilization) {
 
         spreadFertilizer(x, y, front, context, back.agent.consumeMass(cost));
 
+        const deltas = getDeltas(x);
+
         getFront()[coordsToIndex(
-            x + context.deltas[direction].x,
-            y + context.deltas[direction].y)].agent = back.agent;
+            x + deltas[direction].x,
+            y + deltas[direction].y)].agent = back.agent;
 
         back.agent = null;
 
