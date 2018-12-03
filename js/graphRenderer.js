@@ -26,7 +26,7 @@ const GraphRenderer = function(canvas, legend, grid, graphs) {
             element.appendChild(createLegendEntry(graph));
 
         while (legend.firstChild)
-            legend.remove(legend.firstChild);
+            legend.removeChild(legend.firstChild);
 
         legend.appendChild(element);
     };

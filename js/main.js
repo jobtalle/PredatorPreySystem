@@ -34,16 +34,21 @@ const scatter = (object, ratio) => {
 };
 
 simulation.onStep = updateGraphics;
+simulation.onReset = () => {
+    grid.clear();
 
-scatter(Plant, 0.5);
-scatter(Rabbit, 0.02);
-scatter(Fox, 0.02);
+    scatter(Plant, 0.5);
+    scatter(Rabbit, 0.02);
+    scatter(Fox, 0.02);
 
-gridRenderer.gauge();
-graphRenderer.gauge();
+    gridRenderer.gauge();
+    graphRenderer.gauge();
 
-updateGraphics();
-updateGraphics();
+    updateGraphics();
+    updateGraphics();
+};
+
+simulation.onReset();
 
 setInterval(() => {
     if (gui.isRunning())

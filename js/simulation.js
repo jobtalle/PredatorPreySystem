@@ -2,6 +2,7 @@ const Simulation = function(grid) {
     let _frame = 0;
 
     this.onStep = null;
+    this.onReset = null;
     this.getFrame = () => _frame;
     this.step = () => {
         grid.step(
@@ -13,6 +14,11 @@ const Simulation = function(grid) {
             this.onStep();
 
         ++_frame;
+    };
+
+    this.reset = () => {
+        if (this.onReset)
+            this.onReset();
     };
 };
 
