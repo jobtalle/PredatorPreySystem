@@ -12,9 +12,14 @@ const simulation = new Simulation(grid);
 const gridRenderer = new GridRenderer(canvasGrid, legendGrid, grid, hexRadius);
 const graphRenderer = new GraphRenderer(canvasGraph, legendGraph, grid, [
     Types.TYPE_PLANT,
-    Types.TYPE_RABBIT,
-    Types.TYPE_FOX]);
-const gui = new Gui(simulation);
+    Types.TYPE_RABBIT]);
+const gui = new Gui(
+    simulation,
+    document.getElementById("controls-frame"),
+    document.getElementById("controls-stop"),
+    document.getElementById("controls-play"),
+    document.getElementById("controls-step"),
+    document.getElementById("controls-reset"));
 
 const updateGraphics = () => {
     gridRenderer.render();
@@ -22,24 +27,11 @@ const updateGraphics = () => {
     gui.update();
 };
 
-const scatter = (object, ratio) => {
-    for (let i = 0; i < grid.getWidth() * grid.getHeight() * ratio; ++i) {
-        const agent = new object;
-
-        agent.setMass(Math.floor(Math.random() * agent.getMinMass() * 6));
-        grid.get(
-            Math.floor(Math.random() * grid.getWidth()),
-            Math.floor(Math.random() * grid.getHeight())).agent = agent;
-    }
-};
-
 simulation.onStep = updateGraphics;
 simulation.onReset = () => {
     grid.clear();
-
-    scatter(Plant, 0.5);
-    scatter(Rabbit, 0.02);
-    scatter(Fox, 0.02);
+    grid.scatter(Plant, 0.5);
+    grid.scatter(Rabbit, 0.02);
 
     gridRenderer.gauge();
     graphRenderer.gauge();
