@@ -1,5 +1,6 @@
 const Grid = function(width, height, maxFertilization) {
     const _histogram = new Array(Types.TYPE_COUNT).fill(0);
+    const _positions = [];
     const _grids = [
         new Array(width * height + 1),
         new Array(width * height + 1)];
@@ -10,6 +11,20 @@ const Grid = function(width, height, maxFertilization) {
     const flip = () => _front = 1 - _front;
     const getFront = () => _grids[_front];
     const getBack = () => _grids[1 - _front];
+
+    const initializePositions = () => {
+        const forwards = [];
+        const backwards = [];
+
+        for (let y = 0; y < height; ++y) for (let x = 0; x < width; ++x)
+            forwards.push(new Vector(x, y));
+
+        for (let y = height; y-- > 0;) for (let x = width; x-- > 0;)
+            backwards.push(new Vector(x, y));
+
+        _positions.push(forwards);
+        _positions.push(backwards);
+    };
 
     const initializeGrids = () => {
         for (const grid of _grids) {
@@ -194,53 +209,53 @@ const Grid = function(width, height, maxFertilization) {
     this.step = (costMove, costIdle, costCopy) => {
         flip();
 
-        for (let y = 0; y < height; ++y) for (let x = 0; x < width; ++x) {
-            const index = coordsToIndex(x, y);
+        for (const position of _positions[_front]) {
+            const index = coordsToIndex(position.x, position.y);
             const cellBack = getBack()[index];
             const cellFront = getFront()[index];
 
             if (!cellBack.agent)
-                continue;
+              continue;
 
-            const context = makeContext(x, y);
+            const context = makeContext(position.x, position.y);
 
             if (cellBack.agent.getMass() < cellBack.agent.getMinMass()) {
-                actionDie(x, y, context, cellBack, cellFront);
+              actionDie(position.x, position.y, context, cellBack, cellFront);
 
-                continue;
+              continue;
             }
 
             const action = cellBack.agent.step(context);
 
             switch (action.type) {
-                case Action.TYPE_IDLE:
-                    actionIdle(x, y, cellBack, cellFront, context, costIdle);
+              case Action.TYPE_IDLE:
+                  actionIdle(position.x, position.y, cellBack, cellFront, context, costIdle);
 
-                    break;
-                case Action.TYPE_DIE:
-                    actionDie(x, y, context, cellBack, cellFront);
+                  break;
+              case Action.TYPE_DIE:
+                  actionDie(position.x, position.y, context, cellBack, cellFront);
 
-                    break;
-                case Action.TYPE_COPY:
-                    if (!actionCopy(x, y, cellBack, cellFront, context, action.arg0, costCopy))
-                        actionIdle(x, y, cellBack, cellFront, context, costIdle);
+                  break;
+              case Action.TYPE_COPY:
+                  if (!actionCopy(position.x, position.y, cellBack, cellFront, context, action.arg0, costCopy))
+                      actionIdle(position.x, position.y, cellBack, cellFront, context, costIdle);
 
-                    break;
-                case Action.TYPE_EAT_FERTILIZER:
-                    if (!actionEatFertilizer(x, y, cellBack, cellFront, context, action.arg0))
-                        actionIdle(x, y, cellBack, cellFront, context, costIdle);
+                  break;
+              case Action.TYPE_EAT_FERTILIZER:
+                  if (!actionEatFertilizer(position.x, position.y, cellBack, cellFront, context, action.arg0))
+                      actionIdle(position.x, position.y, cellBack, cellFront, context, costIdle);
 
-                    break;
-                case Action.TYPE_EAT_AGENT:
-                    if (!actionEatAgent(x, y, cellBack, cellFront, context, action.arg0))
-                        actionIdle(x, y, cellBack, cellFront, context, costIdle);
+                  break;
+              case Action.TYPE_EAT_AGENT:
+                  if (!actionEatAgent(position.x, position.y, cellBack, cellFront, context, action.arg0))
+                      actionIdle(position.x, position.y, cellBack, cellFront, context, costIdle);
 
-                    break;
-                case Action.TYPE_MOVE:
-                    if (!actionMove(x, y, cellBack, cellFront, context, action.arg0, costMove))
-                        actionIdle(x, y, cellBack, cellFront, context, costIdle);
+                  break;
+              case Action.TYPE_MOVE:
+                  if (!actionMove(position.x, position.y, cellBack, cellFront, context, action.arg0, costMove))
+                      actionIdle(position.x, position.y, cellBack, cellFront, context, costIdle);
 
-                    break;
+                  break;
             }
         }
 
@@ -295,6 +310,7 @@ const Grid = function(width, height, maxFertilization) {
     this.getHeight = () => height;
 
     initializeGrids();
+    initializePositions();
 };
 
 Grid.EAT_FERTILIZER_SPREAD = 0.1;

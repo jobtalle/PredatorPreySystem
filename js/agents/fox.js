@@ -1,8 +1,8 @@
-const Fox = function(direction) {
-    let _direction = direction || Math.floor(Math.random() * 6);
+const Fox = function() {
+    let _direction = Math.floor(Math.random() * 6);
 
     this.getType = () => Types.TYPE_FOX;
-    this.copy = () => new Fox((direction + 3) % 3);
+    this.copy = () => new Fox();
     this.getMinMass = () => Fox.MASS_MIN;
 
     this.step = context => {
@@ -15,25 +15,42 @@ const Fox = function(direction) {
                     possibleAccess[Math.floor(Math.random() * possibleAccess.length)]);
         }
 
-        const facing = context.neighbors[_direction];
+        const plants = [];
+        const rabbits = [];
 
-        if (facing && facing.getType() === Types.TYPE_PLANT)
-            return new Action(Action.TYPE_EAT_AGENT, _direction);
+        for (let direction = 0; direction < 6; ++direction) {
+            if (!context.neighbors[direction])
+                continue;
 
-        if (Math.random() < Fox.TURN_CHANCE)
-            _direction = Math.floor(Math.random() * 6);
+            const neighbor = context.neighbors[direction];
 
-        if (this.getMass() < Fox.IDLE_THRESHOLD && Math.random() < Fox.IDLE_CHANCE)
-            return new Action(Action.TYPE_IDLE);
+            if (neighbor.getType() === Types.TYPE_RABBIT)
+                rabbits.push(direction);
+            else if (neighbor.getType() === Types.TYPE_PLANT && this.getMass() < Fox.HERBIVORE_THRESHOLD)
+                plants.push(direction);
+        }
 
-        return new Action(Action.TYPE_MOVE, _direction);
+        if (rabbits.length)
+            return new Action(Action.TYPE_EAT_AGENT, rabbits[Math.floor(Math.random() * rabbits.length)]);
+        else if (plants.length && Math.random() < Fox.HERBIVORE_CHANCE)
+            return new Action(Action.TYPE_EAT_AGENT, plants[Math.floor(Math.random() * plants.length)]);
+
+        if (this.getMass() > Fox.MOVE_THRESHOLD && Math.random() < Fox.MOVE_CHANCE) {
+            if (context.access[_direction])
+                return new Action(Action.TYPE_MOVE, _direction);
+            else
+                _direction = Math.floor(Math.random() * 6);
+        }
+
+        return new Action(Action.TYPE_IDLE);
     };
 };
 
 Fox.prototype = Object.create(Agent.prototype);
 
-Fox.MASS_MIN = 70;
-Fox.IDLE_CHANCE = 0.7;
-Fox.IDLE_THRESHOLD = 200;
-Fox.COPY_THRESHOLD = 1500;
-Fox.TURN_CHANCE = 0.5;
+Fox.MASS_MIN = 2000;
+Fox.MOVE_CHANCE = 0.1;
+Fox.HERBIVORE_THRESHOLD = 3500;
+Fox.HERBIVORE_CHANCE = 0.8;
+Fox.MOVE_THRESHOLD = 2500;
+Fox.COPY_THRESHOLD = 5000;
