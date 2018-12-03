@@ -17,10 +17,10 @@ const Simulation = function(grid) {
     };
 
     this.reset = () => {
+        _frame = 0;
+
         if (this.onReset)
             this.onReset();
-
-        _frame = 0;
     };
 };
 
