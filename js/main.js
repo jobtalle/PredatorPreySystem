@@ -11,9 +11,9 @@ const grid = new Grid(
 const simulation = new Simulation(grid);
 const gridRenderer = new GridRenderer(canvasGrid, legendGrid, grid, hexRadius);
 const graphRenderer = new GraphRenderer(canvasGraph, legendGraph, grid, [
-    new Graph(Types.TYPE_PLANT, ColorsLow[Types.TYPE_PLANT], "Plant"),
-    new Graph(Types.TYPE_RABBIT, ColorsLow[Types.TYPE_RABBIT], "Rabbit"),
-    new Graph(Types.TYPE_FOX, ColorsLow[Types.TYPE_FOX], "Fox")]);
+    Types.TYPE_PLANT,
+    Types.TYPE_RABBIT,
+    Types.TYPE_FOX]);
 const gui = new Gui(simulation);
 
 const updateGraphics = () => {

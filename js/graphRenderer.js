@@ -1,4 +1,4 @@
-const GraphRenderer = function(canvas, legend, grid, graphs) {
+const GraphRenderer = function(canvas, legend, grid, types) {
     const _frames = [canvas.cloneNode(), canvas.cloneNode()];
 
     let _totalMass = 0;
@@ -7,12 +7,12 @@ const GraphRenderer = function(canvas, legend, grid, graphs) {
 
     const flip = () => _front = 1 - _front;
 
-    const createLegendEntry = graph => {
+    const createLegendEntry = type => {
         const element = document.createElement("div");
 
         element.className = "legend-entry";
-        element.appendChild(document.createTextNode(graph.name));
-        element.style.backgroundColor = graph.color;
+        element.appendChild(document.createTextNode(Names[type]));
+        element.style.backgroundColor = ColorsLow[type];
 
         return element;
     };
@@ -22,8 +22,8 @@ const GraphRenderer = function(canvas, legend, grid, graphs) {
 
         element.className = "legend";
 
-        for (const graph of graphs)
-            element.appendChild(createLegendEntry(graph));
+        for (const type of types)
+            element.appendChild(createLegendEntry(type));
 
         while (legend.firstChild)
             legend.removeChild(legend.firstChild);
@@ -44,12 +44,12 @@ const GraphRenderer = function(canvas, legend, grid, graphs) {
         context.lineTo(x, y);
         context.stroke();
 
-        for (const graph of graphs) {
-            context.strokeStyle = graph.color;
+        for (const type of types) {
+            context.strokeStyle = ColorsLow[type];
             context.beginPath();
             context.moveTo(x, y);
 
-            y -= (grid.getHistogram()[graph.type] / _totalMass) * canvas.height;
+            y -= (grid.getHistogram()[type] / _totalMass) * canvas.height;
 
             context.lineTo(x, y);
             context.stroke();
