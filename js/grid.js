@@ -276,6 +276,21 @@ const Grid = function(width, height, maxFertilization) {
         return mass;
     };
 
+    this.clear = () => {
+        initializeGrids();
+    };
+
+    this.scatter = (object, ratio) => {
+        for (let i = 0; i < this.getWidth() * this.getHeight() * ratio; ++i) {
+            const agent = new object;
+
+            agent.setMass(Math.floor(Math.random() * agent.getMinMass() * Grid.SCATTER_INITIAL_MASS_FACTOR));
+            this.get(
+                Math.floor(Math.random() * this.getWidth()),
+                Math.floor(Math.random() * this.getHeight())).agent = agent;
+        }
+    };
+
     this.getWidth = () => width;
     this.getHeight = () => height;
 
@@ -284,6 +299,7 @@ const Grid = function(width, height, maxFertilization) {
 
 Grid.EAT_FERTILIZER_SPREAD = 0.1;
 Grid.SPREAD_FRACTION = 0.4;
+Grid.SCATTER_INITIAL_MASS_FACTOR = 6;
 Grid.DELTAS_A = [
     new Vector(1, -1),
     new Vector(1, 0),

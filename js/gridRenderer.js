@@ -23,12 +23,13 @@ const GridRenderer = function(canvas, legend, grid, radius) {
         element.appendChild(createLegendLine("Dimensions: " + grid.getWidth() + "x" + grid.getHeight()));
 
         while (legend.firstChild)
-            legend.remove(legend.firstChild);
+            legend.removeChild(legend.firstChild);
 
         legend.appendChild(element);
     };
 
     const makeRenderers = () => {
+        _tileRenderers.splice(0, _tileRenderers.length);
         _tileRenderers.push(new TileRenderer(_cellWidth, _cellHeight, radius, "#eee", "#8c8170"));
 
         for (let type = 0; type < Types.TYPE_COUNT; ++type)
@@ -62,6 +63,8 @@ const GridRenderer = function(canvas, legend, grid, radius) {
 
     this.gauge = () => {
         createLegend();
+
+        makeRenderers();
     };
 
     this.render = () => {
@@ -71,6 +74,4 @@ const GridRenderer = function(canvas, legend, grid, radius) {
 
         renderAgents(context);
     };
-
-    makeRenderers();
 };
