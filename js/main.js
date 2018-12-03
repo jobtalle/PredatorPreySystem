@@ -37,7 +37,7 @@ simulation.onStep = updateGraphics;
 
 scatter(Plant, 0.5);
 scatter(Rabbit, 0.02);
-//scatter(Fox, 0.02);
+scatter(Fox, 0.01);
 
 gridRenderer.gauge();
 graphRenderer.gauge();
