@@ -19,6 +19,8 @@ const Simulation = function(grid) {
     this.reset = () => {
         if (this.onReset)
             this.onReset();
+
+        _frame = 0;
     };
 };
 
