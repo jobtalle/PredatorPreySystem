@@ -42,6 +42,7 @@ const Instance = function(
 
         gridRenderer.gauge();
         graphRenderer.gauge();
+        graphRenderer.reset();
 
         updateGraphics();
         updateGraphics();

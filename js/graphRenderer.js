@@ -3,7 +3,7 @@ const GraphRenderer = function(canvas, legend, grid, types) {
 
     let _totalMass = 0;
     let _front = 0;
-    let _history = 0;
+    let _history = -1;
 
     const flip = () => _front = 1 - _front;
 
@@ -64,6 +64,16 @@ const GraphRenderer = function(canvas, legend, grid, types) {
     const renderGraph = context => {
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.drawImage(_frames[_front], Math.min(0, -canvas.width + _history), 0);
+    };
+
+    const clear = context => {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    this.reset = () => {
+        clear(_frames[1 - _front].getContext("2d"));
+
+        _history = -1;
     };
 
     this.gauge = () => {
